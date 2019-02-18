@@ -2,11 +2,6 @@ import { Store, inject } from '../src';
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-/* TODO
-1. model异步获取如何绑定VM
-2. 模块之间通信
-*/
-
 // 外部输入参数
 const inputData = {
   num:1,
@@ -24,22 +19,27 @@ const inputData = {
   ]
 };
 
-const phxA = new Phoenix('moduleA');
-
+const phxA = new Phoenix();
 
 // 实例化Model后,生成一个Observable对象
 phxA.Model({
+  nameSpace:'moduleA',
   model:inputData,
   effects: {
-    * fetchUser({ payload: id }, { call, put }) {
-      const user = yield call(fetchUser, id);
-      yield put({ type: 'saveUser', payload: user });
+    * fetchServer(requireParams) {
+      const data = ajax.require(requireParams);
+      this.reloadModel(data);
+      // const user = yield call(fetchUser, id);
+      // yield put({ type: 'saveUser', payload: user });
     },
   },
   subscriptions: {
     keyEvent({dispatch}) {
       key('⌘+up, ctrl+up', () => { dispatch({type:'add'}) });
     },
+  },
+  listener:{
+    // 暂时不用
   }
 });  
 
@@ -70,6 +70,9 @@ phxA.ViewModel(
       },
       compare(state){
         state.result?'Y':'N';
+      },
+      asyncRequire(){
+        phxA.model.effects.fetchServer();
       }
     }
   }
@@ -90,6 +93,8 @@ class App extends React.Component {
         <button onClick={() => dispatch(actions.minus)}>minus</button>
         <button onClick={() => dispatch(actions.asyncAdd)}>async</button>
         <button onClick={() => dispatch(actions.compare)}>async</button>
+        <button onClick={() => dispatch(actions.asyncRequire)}>async</button>
+
       </div>
     </Wrapper>);
   }
