@@ -24,7 +24,7 @@ const phxA = new Phoenix();
 // 实例化Model后,生成一个Observable对象
 phxA.Model({
   nameSpace:'moduleA',
-  model:inputData,
+  data:inputData,
   effects: {
     * fetchServer(requireParams) {
       const data = ajax.require(requireParams);
@@ -39,7 +39,7 @@ phxA.Model({
     },
   },
   listener:{
-    // 暂时不用
+    // todo 暂时不用,监听模块之间通信使用
   }
 });  
 

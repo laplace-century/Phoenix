@@ -1,60 +1,31 @@
-import dependenceManager from "./s-dependence-manager";
-
-var objIDCounter = 1;
-class Observable {
-        /**
-         * 全局唯一 id
-         * @type {number}
-         */
-        objID = 0;
-        /**
-         * 真实值
-         * @type {null}
-         */
-        objVal = null;
-        constructor(value) {
-                this.objID = "ob-" + ++objIDCounter;
-                if (Array.isArray(value)) {
-                        this._wrapArrayProxy(value);
+export default class Observable {
+        constructor(obj) {
+                if (isTypeOf(obj, "object")) {
+                    return this.walk(obj);
                 } else {
-                        this.objVal = value;
+                    console.log('不存在数据直接是一个值');
                 }
         }
 
-        get() {
-                dependenceManager.collect(this.objID);
-                return this.objVal;
+        walk(obj) {
+                const keys = Object.keys(obj);
+                keys.forEach(key => {
+                        this.defineReactive(obj, key, obj[key]);
+                });
+                return obj;
         }
 
-        set(value) {
-                if (Array.isArray(value)) {
-                        this._wrapArrayProxy(value);
-                } else {
-                        this.objVal = value;
-                }
-                dependenceManager.trigger(this.objID);
-        }
-
-        /**
-         * 手动触发依赖
-         */
-        trigger() {
-                dependenceManager.trigger(this.objID);
-        }
-        /**
-         * 对数组包装Proxy拦截数组操作的动作
-         */
-        _wrapArrayProxy(value) {
-                this.objVal = new Proxy(value, {
-                        set: (obj, key, val) => {
-                                obj[key] = val;
-                                if (key != "length") {
-                                        this.trigger();
-                                }
-                                return true;
+        defineReactive(obj, key, val) {
+                const dep = new Dep();
+                Object.defineProperty(obj, key, {
+                        get() {
+                                dep.depend();
+                                return val;
+                        },
+                        set(newVal) {
+                                val = newVal;
+                                dep.notify();
                         }
                 });
         }
 }
-
-export default Observable;
