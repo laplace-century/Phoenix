@@ -4,11 +4,15 @@ import {
 import {
     Model
 } from './model';
+import {
+    ViewModel
+} from './viewModel';
 export default class Phoenix {
     _NAME_SPACE = '';
 
     ViewModelDataSource = null;
     _ModelInstance = null;
+    _ViewModelInstance= null;
 
     constructor() {
         super();
@@ -23,7 +27,7 @@ export default class Phoenix {
     }
 
     ViewModel = (viewModelParameterObject) => {
-
+        _ViewModelInstance = new ViewModel(_NAME_SPACE,viewModelParameterObject,_ModelInstance.OBSERVABLE_OBJECT);
     }
 
     inject = () => injectFn(ViewModelDataSource);

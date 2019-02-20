@@ -1,31 +1,31 @@
+import {DefineReactive} from './defineReactive';
+
 export default class Observable {
-        constructor(obj) {
-                if (isTypeOf(obj, "object")) {
-                    return this.walk(obj);
-                } else {
-                    console.log('不存在数据直接是一个值');
-                }
-        }
+    constructor(obj) {
+        return this.walk(obj);
+    }
 
-        walk(obj) {
-                const keys = Object.keys(obj);
-                keys.forEach(key => {
-                        this.defineReactive(obj, key, obj[key]);
-                });
-                return obj;
-        }
+    walk(obj) {
+        const keys = Object.keys(obj);
+        keys.forEach(key => {
+                this.defineReactive(obj, key, obj[key]);
+        });
+        return obj;
+    }
 
-        defineReactive(obj, key, val) {
-                const dep = new Dep();
-                Object.defineProperty(obj, key, {
-                        get() {
-                                dep.depend();
-                                return val;
-                        },
-                        set(newVal) {
-                                val = newVal;
-                                dep.notify();
-                        }
-                });
-        }
+    defineReactive(obj, key, val) {
+        const dep = new DefineReactive();
+        Object.defineProperty(obj, key, {
+            get() {
+                console.log(`我的${key}属性被读取了！`)
+                dep.depend();
+                return val;
+            },
+            set(newVal) {
+                console.log(`我的${key}属性被修改了！`)
+                val = newVal;
+                dep.notify();
+            }
+        });
+    }
 }

@@ -46,30 +46,35 @@ phxA.Model({
 // 实例化ViewModel后,生成的VM对象用于组件内的渲染与事件
 phxA.ViewModel(
   {
-    state:{
-      'count':() => {
-        return phxA.MODEL.array[0].val;
-      },
-      'result':()=>{
-        return phxA.MODEL.root.fatherNode.childNode.node>this.count?true:false;
+    store:{
+      'count':{
+        'handle':() => {
+          return phxA.MODEL.array[0].val;
+        },
+        'onComputedUpdate':()=>{}
+        },
+      'result':{
+        'handle':() => {
+          return phxA.MODEL.root.fatherNode.childNode.node>this.count?true:false;
+        },
+        'onComputedUpdate':(handleRst)=>{
+           console.log(handleRst?'yes':'no');
+        }
       }
     },
     actions:{
       // payload 需要传递的信息
       add(state,payload){
-        state.count++;
+        phxA.MODEL.array[0].val++;
       },
       // payload 需要传递的信息
       minus(state,payload){
-        state.count--;
+        phxA.MODEL.array[0].val--;
       },
       asyncAdd () {
         setTimeout(() => {
           this.add;
         }, 500)
-      },
-      compare(state){
-        state.result?'Y':'N';
       },
       asyncRequire(){
         phxA.model.effects.fetchServer();
@@ -82,8 +87,8 @@ phxA.ViewModel(
 class App extends React.Component {
   render () {
     
-    const { state,actions,dispatch } = phxA.VIEW_MODEL;
-    const { count,result } = state;
+    const { actions,dispatch } = phxA.VIEW_MODEL;
+    const { count,result } = phxA.VIEW_MODEL.state;
 
     return (<Wrapper>
       <span>{count}</span>
@@ -92,7 +97,6 @@ class App extends React.Component {
         <button onClick={() => dispatch(actions.add)}>add</button>
         <button onClick={() => dispatch(actions.minus)}>minus</button>
         <button onClick={() => dispatch(actions.asyncAdd)}>async</button>
-        <button onClick={() => dispatch(actions.compare)}>async</button>
         <button onClick={() => dispatch(actions.asyncRequire)}>async</button>
 
       </div>
