@@ -30,5 +30,5 @@ export default class Phoenix {
         _ViewModelInstance = new ViewModel(_NAME_SPACE,viewModelParameterObject,_ModelInstance.OBSERVABLE_OBJECT);
     }
 
-    inject = () => injectFn(ViewModelDataSource);
+    inject = () => injectFn(_ViewModelInstance.state);
 }
