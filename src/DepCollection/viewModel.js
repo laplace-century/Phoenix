@@ -1,4 +1,6 @@
-import { DependenceManager } from './dependenceManager';
+import {
+    DependenceManager
+} from './dependenceManager';
 
 export default class ViewModel {
     _NAME_SPACE = '';

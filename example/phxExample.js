@@ -68,7 +68,7 @@ phxA.ViewModel(
         phxA.MODEL.array[0].val++;
       },
       // payload 需要传递的信息
-      minus(state,payload){
+      minus(payload){
         phxA.MODEL.array[0].val--;
       },
       asyncAdd () {

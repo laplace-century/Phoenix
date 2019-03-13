@@ -9,21 +9,21 @@ export default class Model {
         }
         this._NAME_SPACE = nameSpace ? nameSpace : '';
 
-        if(!modelParameterObject.data){
+        if (!modelParameterObject.data) {
             console.error('modelParameterObject.data is undefined');
             return;
         }
-        this.OBSERVABLE_OBJECT =this._CreateObservable(modelParameterObject.data);
+        this.OBSERVABLE_OBJECT = this._CreateObservable(modelParameterObject.data);
     };
 
     _CreateObservable = (dataSource) => {
         if (Array.isArray(dataSource)) {
             dataSource.forEach(obj => {
                 _CreateObservable(obj);
-        });
+            });
         } else if (isTypeOf(dataSource, "object")) {
             return new Observable(dataSource);
-        }else {
+        } else {
             console.error('不存在数据是一个值');
         }
     }
